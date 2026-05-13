@@ -4,11 +4,17 @@
 <meta charset="UTF-8">
 <title>סטטוס לגלית - 13.5.2026</title>
 <style>
+  :root {
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --accent: #2563eb;
+  }
   body {
     font-family: Calibri, Arial, sans-serif;
     font-size: 15px;
     line-height: 1.7;
-    color: #1f2937;
+    color: var(--text);
     max-width: 760px;
     margin: 24px auto;
     padding: 0 24px;
@@ -16,14 +22,46 @@
     text-align: right;
     background: #ffffff;
   }
-  h2 {
-    color: #1f2937;
+  h2, summary.section-title {
+    color: var(--text);
     font-size: 17px;
     margin-top: 28px;
     margin-bottom: 12px;
-    border-bottom: 2px solid #2563eb;
+    border-bottom: 2px solid var(--accent);
     padding-bottom: 6px;
     display: inline-block;
+    font-weight: 700;
+  }
+  summary.section-title {
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+    position: relative;
+    padding-left: 26px;
+  }
+  summary.section-title::-webkit-details-marker { display: none; }
+  summary.section-title::before {
+    content: "▸";
+    position: absolute;
+    left: 4px;
+    top: 0;
+    color: var(--muted);
+    font-size: 14px;
+    transition: transform 0.15s ease;
+    display: inline-block;
+  }
+  details[open] > summary.section-title::before {
+    transform: rotate(90deg);
+  }
+  details {
+    margin-bottom: 6px;
+  }
+  details > *:not(summary) {
+    animation: fade-in 0.18s ease;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(-3px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   p { margin: 12px 0; }
   table {
@@ -33,8 +71,8 @@
   }
   th, td {
     text-align: right;
-    padding: 10px 14px;
-    border-bottom: 1px solid #e5e7eb;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
     vertical-align: top;
   }
   th {
@@ -42,15 +80,26 @@
     font-weight: 600;
     color: #374151;
   }
-  td.stage-design { color: #7c3aed; font-weight: 600; }
-  td.stage-dev { color: #b45309; font-weight: 600; }
-  td.stage-investigation { color: #1d4ed8; font-weight: 600; }
-  td.stage-waiting { color: #6b7280; font-weight: 600; }
+  .chip {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 12px;
+    margin-left: 6px;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+  }
+  .chip-design { background: #fae8ff; color: #86198f; }
+  .chip-dev { background: #ffedd5; color: #9a3412; }
+  .chip-investigation { background: #dbeafe; color: #1e40af; }
+  .chip-waiting { background: #f3f4f6; color: #4b5563; }
+  .chip-ready { background: #dcfce7; color: #166534; }
   ul { padding-right: 22px; margin: 10px 0; }
   li { margin-bottom: 8px; }
   .signoff { margin-top: 28px; }
   .header-meta {
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 14px;
     margin-bottom: 22px;
     color: #4b5563;
@@ -59,9 +108,36 @@
   .header-meta .project {
     font-size: 18px;
     font-weight: 700;
-    color: #1f2937;
+    color: var(--text);
     margin-bottom: 4px;
   }
+  .image-block {
+    text-align: center;
+    margin: 18px 0;
+  }
+  .image-block img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .image-caption {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 18px;
+    padding: 12px 14px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .legend-item { display: inline-flex; align-items: center; }
 </style>
 </head>
 <body>
@@ -77,6 +153,14 @@
 
 <h2>סטטוס הסעיפים שהעלית</h2>
 
+<div class="legend">
+  <span class="legend-item"><span class="chip chip-design">בעיצוב</span></span>
+  <span class="legend-item"><span class="chip chip-dev">בעבודה</span></span>
+  <span class="legend-item"><span class="chip chip-investigation">בבדיקה</span></span>
+  <span class="legend-item"><span class="chip chip-waiting">מחכים ממך</span></span>
+  <span class="legend-item"><span class="chip chip-ready">מוכן</span></span>
+</div>
+
 <table>
   <thead>
     <tr>
@@ -87,65 +171,75 @@
   <tbody>
     <tr>
       <td>סינון הפיד לפי עיר וטווח גילאים (כולל אפשרות לבחור כמה טווחים יחד)</td>
-      <td class="stage-design">בעיצוב</td>
+      <td><span class="chip chip-design">בעיצוב</span></td>
     </tr>
     <tr>
       <td>פופאפ אישור כשמסמנים "לא" בהתראות</td>
-      <td class="stage-design">בעיצוב</td>
+      <td><span class="chip chip-design">בעיצוב</span></td>
     </tr>
     <tr>
       <td>נקודות אור לא עובד</td>
-      <td class="stage-waiting">אנחנו רואים אצלנו משתמשות עם נקודות אור - נשמח להבהרה מה בדיוק לא עובד</td>
+      <td><span class="chip chip-waiting">מחכים ממך</span> אנחנו רואים אצלנו משתמשות עם נקודות אור - נשמח להבהרה מה בדיוק לא עובד</td>
     </tr>
     <tr>
       <td>שינוי הניסוח בשאלון בשלב התמונה</td>
-      <td class="stage-design">קיבלנו את הניסוח - ייכלל בגרסה הקרובה</td>
+      <td><span class="chip chip-ready">קיבלנו</span> ייכלל בגרסה הקרובה</td>
     </tr>
     <tr>
       <td>הצגת הכרטיס שלי בראש הפיד</td>
-      <td class="stage-design">בעיצוב - נשלח לך 2 אפשרויות לבחירה</td>
+      <td><span class="chip chip-design">בעיצוב</span> 2 אפשרויות לבחירה (ראי למטה)</td>
     </tr>
     <tr>
       <td>בעיות התחברות במכשירים שצוינו</td>
-      <td class="stage-investigation">בבדיקה - ראי הערה למטה</td>
+      <td><span class="chip chip-investigation">בבדיקה</span> ראי הערה למטה</td>
     </tr>
   </tbody>
 </table>
 
-<h2>המלצת עיצוב - מסך הסינון</h2>
-<p>כך נראית הצעת העיצוב למסך הסינון - היוזרית בוחרת לפי עיר ו/או טווח גילאים, יכולה לבחור אחד מהם או את שניהם, ולאשר.</p>
-<p style="text-align: center; margin: 18px 0;">
-  <img src="design-filter.png" alt="הצעת עיצוב למסך הסינון" style="max-width: 100%; height: auto; border: 1px solid #e5e7eb; border-radius: 6px;">
-</p>
-<p style="font-size: 13px; color: #6b7280; text-align: center;">3 מצבים: סינון לפי עיר + טווח גילאים מותאם · טווח גילאים פתוח · סינון לפי עיר בלבד</p>
+<details open>
+  <summary class="section-title">המלצת עיצוב - מסך הסינון</summary>
+  <p>כך נראית הצעת העיצוב למסך הסינון - היוזרית בוחרת לפי עיר ו/או טווח גילאים, יכולה לבחור אחד מהם או את שניהם, ולאשר.</p>
+  <p class="image-block">
+    <img src="design-filter.png" alt="הצעת עיצוב למסך הסינון">
+  </p>
+  <p class="image-caption">3 מצבים: סינון לפי עיר + טווח גילאים מותאם · טווח גילאים פתוח · סינון לפי עיר בלבד</p>
+</details>
 
-<h2>המלצה לעיצוב - הצגת הכרטיס שלי בפיד</h2>
-<p>הכנו 2 אפשרויות להצגת הכרטיס שלך - נשמח לדעת מה אתן מעדיפות:</p>
-<p style="text-align: center; margin: 18px 0;">
-  <img src="design-my-card.png" alt="שתי אפשרויות להצגת הכרטיס שלי בפיד" style="max-width: 100%; height: auto; border: 1px solid #e5e7eb; border-radius: 6px;">
-</p>
-<ul>
-  <li><strong>אפשרות א' (משמאל בתמונה)</strong> - הכרטיס שלך מוצג בתוך הפיד עצמו, מסומן ומובלט (רקע צהבהב, תווית "הפרופיל שלי", כפתור עריכה).</li>
-  <li><strong>אפשרות ב' (מימין בתמונה)</strong> - עיגול קטן עם תמונת הפרופיל בפינת ההדר, מחוץ לפיד. הלוגו של "מישהי לקפה" זז למרכז כדי לתת מקום לעיגול.</li>
-</ul>
-<p>נשמח לדעת מה את מעדיפה.</p>
+<details open>
+  <summary class="section-title">המלצה לעיצוב - הצגת הכרטיס שלי בפיד</summary>
+  <p>הכנו 2 אפשרויות להצגת הכרטיס שלך - נשמח לדעת מה אתן מעדיפות:</p>
+  <p class="image-block">
+    <img src="design-my-card.png" alt="שתי אפשרויות להצגת הכרטיס שלי בפיד">
+  </p>
+  <ul>
+    <li><strong>אפשרות א' (משמאל בתמונה)</strong> - הכרטיס שלך מוצג בתוך הפיד עצמו, מסומן ומובלט (רקע צהבהב, תווית "הפרופיל שלי", כפתור עריכה).</li>
+    <li><strong>אפשרות ב' (מימין בתמונה)</strong> - עיגול קטן עם תמונת הפרופיל בפינת ההדר, מחוץ לפיד. הלוגו של "מישהי לקפה" זז למרכז כדי לתת מקום לעיגול.</li>
+  </ul>
+  <p>נשמח לדעת מה את מעדיפה.</p>
+</details>
 
-<h2>מה עוד ייכלל בגרסה הקרובה</h2>
-<p>מעבר לבקשות שלך, הגרסה הקרובה תכלול גם תיקונים שאיתרנו בעצמנו:</p>
-<ul>
-  <li>שמירת הסינון בעת גלילה (לא יתאפס יותר)</li>
-  <li>שמירת מיקום הצפייה בחזרה מפרופיל (לא יקפוץ חזרה לראש הרשימה)</li>
-  <li>הצגת שנת לידה בארבע ספרות</li>
-</ul>
+<details>
+  <summary class="section-title">מה עוד ייכלל בגרסה הקרובה</summary>
+  <p>מעבר לבקשות שלך, הגרסה הקרובה תכלול גם תיקונים שאיתרנו בעצמנו:</p>
+  <ul>
+    <li>שמירת הסינון בעת גלילה (לא יתאפס יותר)</li>
+    <li>שמירת מיקום הצפייה בחזרה מפרופיל (לא יקפוץ חזרה לראש הרשימה)</li>
+    <li>הצגת שנת לידה בארבע ספרות</li>
+  </ul>
+</details>
 
 <h2>תאריך משוער לגרסה</h2>
 <p>היעד שלנו לגרסה הקרובה הוא <strong>יום שלישי (19.5)</strong>. נעשה כל מאמץ להוציא גרסה מוקדמת יותר אם נספיק.</p>
 
-<h2>בעיות ההתחברות במכשירים</h2>
-<p>קיבלנו את רשימת המכשירים שציינת. לא הצלחנו לשחזר אצלנו את הבעיות במכשירים אלה. מה שכן עשינו - הוספנו מנגנון ניטור פנימי שמתעד שגיאות התחברות בזמן אמת, כך שאם הבעיה תחזור אצל מישהי, נוכל לאתר אותה מהר יותר ולטפל בה ישירות.</p>
+<details>
+  <summary class="section-title">בעיות ההתחברות במכשירים</summary>
+  <p>קיבלנו את רשימת המכשירים שציינת. לא הצלחנו לשחזר אצלנו את הבעיות במכשירים אלה. מה שכן עשינו - הוספנו מנגנון ניטור פנימי שמתעד שגיאות התחברות בזמן אמת, כך שאם הבעיה תחזור אצל מישהי, נוכל לאתר אותה מהר יותר ולטפל בה ישירות.</p>
+</details>
 
-<h2>איכות הדאטה ב-CMS</h2>
-<p>בעקבות הסקירה שעשית על ה-CMS (Matches חלקיים שמופיעים בלי מיקום/תאריך, ויוזרים שנשמרו ללא שם פרטי) - פתחנו בדיקה פנימית כדי להבין איך הרשומות האלה נכנסו, ולגבש פתרון שיציג ב-CMS רק דאטה שימושית או יפריד בבירור בין רשומות שלמות לחלקיות. נחזור אלייך עם הממצאים וההצעה.</p>
+<details>
+  <summary class="section-title">איכות הדאטה ב-CMS</summary>
+  <p>בעקבות הסקירה שעשית על ה-CMS (Matches חלקיים שמופיעים בלי מיקום/תאריך, ויוזרים שנשמרו ללא שם פרטי) - פתחנו בדיקה פנימית כדי להבין איך הרשומות האלה נכנסו, ולגבש פתרון שיציג ב-CMS רק דאטה שימושית או יפריד בבירור בין רשומות שלמות לחלקיות. נחזור אלייך עם הממצאים וההצעה.</p>
+</details>
 
 <h2>מה אנחנו עדיין צריכים ממך</h2>
 <ul>
@@ -155,8 +249,8 @@
 
 <p class="signoff">תודה,</p>
 
-<div style="margin-top: 12px; padding-top: 16px; border-top: 1px solid #e5e7eb; line-height: 1.5;">
-  <div style="font-weight: 700; color: #1f2937; font-size: 16px;">חמי בן לביא</div>
+<div style="margin-top: 12px; padding-top: 16px; border-top: 1px solid var(--border); line-height: 1.5;">
+  <div style="font-weight: 700; color: var(--text); font-size: 16px;">חמי בן לביא</div>
   <div style="color: #4b5563; font-size: 14px;">Head of Product Operations</div>
   <div style="color: #4b5563; font-size: 14px;">200Apps</div>
 </div>
